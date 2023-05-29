@@ -4,7 +4,7 @@ const newPlayerFormContainer = document.getElementById('new-player-form');
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-ACC-PT-WEB-PT-C';
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${2302-ACC-PT-WEB-PT-C}/`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/2302-ACC-PT-WEB-PT-C`;
 
 /**
  * It fetches all players from the API and returns them
@@ -12,7 +12,9 @@ const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${2302-ACC-PT-WEB-PT-C}
  */
 const fetchAllPlayers = async () => {
     try {
-
+        const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players`);
+        const result = await response.json();
+        console.log(result);
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
     }
@@ -28,7 +30,17 @@ const fetchSinglePlayer = async (playerId) => {
 
 const addNewPlayer = async (playerObj) => {
     try {
-
+       const response = await fetch(
+      'https://fsa-puppy-bowl.herokuapp.com/api/2302-ACC-PT-WEB-PT-C/players/1',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const result = await response.json();
+    console.log(result);
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
     }
@@ -78,19 +90,104 @@ const renderAllPlayers = (playerList) => {
  * It renders a form to the DOM, and when the form is submitted, it adds a new player to the database,
  * fetches all players from the database, and renders them to the DOM.
  */
-const renderNewPlayerForm = () => {
-    try {
-        
-    } catch (err) {
-        console.error('Uh oh, trouble rendering the new player form!', err);
-    }
+/* create form thru DOM - Dana */
+const renderNewPlayerForm = async () => {
+  const form = document.createElement('form');
+  form.setAttribute('method', 'POST');
+  form.setAttribute('action', `${APIURL}/players`)
+  form.setAttribute('id', 'signUpForm');
+
+  const formH1 = document.createElement("h1");
+  formH1.innerHTML = "Yay, puppies! Join a Puppy Bowl team today!";
+  form.appendChild(formH1);
+
+  // Create an input element for Puppy Name
+  const puppyNameInput = document.createElement("input");
+  puppyNameInput.setAttribute("id", "puppyValue")
+  puppyNameInput.setAttribute("type", "text");
+  puppyNameInput.setAttribute("name", "PuppyName");
+  puppyNameInput.setAttribute("placeholder", "Puppy Name");
+  form.appendChild(puppyNameInput);
+
+  const dogBreedInput = document.createElement("input");
+  dogBreedInput.setAttribute("id", "breedValue")
+  dogBreedInput.setAttribute("type", "text");
+  dogBreedInput.setAttribute("name", "DogBreed");
+  dogBreedInput.setAttribute("placeholder", "Breed");
+  form.appendChild(dogBreedInput);
+
+  const imgURL = document.createElement("input");
+  imgURL.setAttribute("id", "imgValue")
+  imgURL.setAttribute("type", "text");
+  imgURL.setAttribute("name", "image");
+  imgURL.setAttribute("placeholder", "Image URL of puppy");
+  form.appendChild(imgURL);
+
+  // create a submit button
+  const submit = document.createElement("input");
+  submit.setAttribute("id", "submitValue")
+  submit.setAttribute("type", "submit");
+  submit.setAttribute("value", "Submit");
+  form.appendChild(submit);
+
+  // Append the form to the newPlayerFormContainer element
+  newPlayerFormContainer.appendChild(form);
+
+  // Apply styles to the form
+  document.getElementById("new-player-form").style.background = "#c2c6f9";
+  document.getElementById("new-player-form").style.display = "grid";
+  document.getElementById("new-player-form").style.height = "600px";
+  document.getElementById("new-player-form").style.width = "600px";
+  document.getElementById("new-player-form").style.justifyContent = "center";
+  document.getElementById("new-player-form").style.alignContent = "center";
+  document.getElementById("new-player-form").style.marginTop = "100px";
+
+  document.getElementById("puppyValue").style.padding = "10px";
+  document.getElementById("puppyValue").style.margin = "10px";
+  document.getElementById("breedValue").style.padding = "10px";
+  document.getElementById("breedValue").style.margin = "10px";
+  document.getElementById("imgValue").style.padding = "10px";
+  document.getElementById("imgValue").style.margin = "10px";
+
+  document.querySelector("h1").style.letterSpacing = "3px";
+  document.querySelector("h1").style.width = "500px";
+
+  function applyFontToElements() {
+    var elements = document.querySelectorAll('body');
+    elements.forEach(function(element) {
+      element.style.fontFamily = 'Montserrat, sans-serif';
+      element.style.wordSpacing = "23px";
+      element.style.display = "grid";
+      element.style.justifyItems = "center";
+    });
+  }
+
+  // Load the font and apply it to the elements after it has finished loading
+  var link = document.createElement('link');
+  link.href = 'https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap';
+  link.rel = 'stylesheet';
+  document.head.appendChild(link);
+
+  link.addEventListener('load', function() {
+    applyFontToElements();
+  });
 }
+
+
+        
+        
+    try {
+    
+  }     
+     catch (err) {
+        console.error('Uh oh, trouble rendering the new player form!', err);
+    
+     }
 
 const init = async () => {
-    const players = await fetchAllPlayers();
-    renderAllPlayers(players);
+  renderNewPlayerForm();
+  const players = await fetchAllPlayers();
+  renderAllPlayers(players);
+};
 
-    renderNewPlayerForm();
-}
-
-init();
+init(); 
