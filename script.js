@@ -4,7 +4,7 @@ const newPlayerFormContainer = document.getElementById('new-player-form');
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
 const cohortName = '2302-ACC-PT-WEB-PT-C';
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/2302-ACC-PT-WEB-PT-C`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 
 /**
  * It fetches all players from the API and returns them
@@ -12,9 +12,10 @@ const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/2302-ACC-PT-WEB-PT-C`;
  */
 const fetchAllPlayers = async () => {
     try {
-        const response = await fetch(`https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/players`);
-        const result = await response.json();
-        console.log(result);
+      const response = await fetch(`${APIURL}/players`);
+      const allPlayers = await response.json();
+      console.log(allPlayers);
+      return allPlayers;
     } catch (err) {
         console.error('Uh oh, trouble fetching players!', err);
     }
@@ -22,7 +23,10 @@ const fetchAllPlayers = async () => {
 
 const fetchSinglePlayer = async (playerId) => {
     try {
-
+      const response = await fetch(`${APIURL}/players/${playerId}`);
+      const singlePlayer = await response.json();
+      console.log(singlePlayer)
+      return singlePlayer;
     } catch (err) {
         console.error(`Oh no, trouble fetching player #${playerId}!`, err);
     }
@@ -30,32 +34,39 @@ const fetchSinglePlayer = async (playerId) => {
 
 const addNewPlayer = async (playerObj) => {
     try {
-       const response = await fetch(
-      'https://fsa-puppy-bowl.herokuapp.com/api/2302-ACC-PT-WEB-PT-C/players/1',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-    const result = await response.json();
-    console.log(result);
+     const response = await fetch(`${APIURL}/players/`, {
+            method: 'POST', 
+            body: JSON.stringify(playerObj),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        const result = await response.json();
+        console.log(result);
+        fetchAllPlayers();
+        
     } catch (err) {
         console.error('Oops, something went wrong with adding that player!', err);
     }
 };
 
+
 const removePlayer = async (playerId) => {
     try {
+       const response = await fetch(`${APIURL}/players/${playerId}`, {
+            method: 'DELETE'
+        });
+        const result = await response.json();
+        console.log(result);
+        fetchAllPlayers();
 
     } catch (err) {
         console.error(
             `Whoops, trouble removing player #${playerId} from the roster!`,
-            err
-        );
+            err);
     }
 };
+
 
 /**
  * It takes an array of player objects, loops through them, and creates a string of HTML for each
@@ -77,9 +88,27 @@ const removePlayer = async (playerId) => {
  * @param playerList - an array of player objects
  * @returns the playerContainerHTML variable.
  */
-const renderAllPlayers = (playerList) => {
+const renderAllPlayers = async (playerList, playerContainer) => {
     try {
-        
+      playerContainer.innerHTML = 'All Players';
+      
+      const playersArray = Array.from(playerList);
+      playersArray.forEach((player) => {
+      const playerElement = document.createElement('div');
+      playerElement.classList.add('player');
+      playerElement.innerHTML = `
+                <h2>${player.name}</h2>
+                <p>${player.description}</p>
+                <p>${player.date}</p>
+                <p>${player.time}</p>
+                <p>${player.location}</p>
+                <button class="details-button" data-id="${player.id}">See Details</button>
+                <button class="delete-button" data-id="${player.id}">Delete</button>
+            `;
+      playerContainer.appendChild(playerElement); 
+      
+    });
+
     } catch (err) {
         console.error('Uh oh, trouble rendering players!', err);
     }
@@ -97,7 +126,7 @@ const renderNewPlayerForm = async () => {
   form.setAttribute('action', `${APIURL}/players`)
   form.setAttribute('id', 'signUpForm');
 
-  const formH1 = document.createElement("h1");
+  const formH1 = document.createElement("h1");  
   formH1.innerHTML = "Yay, puppies! Join a Puppy Bowl team today!";
   form.appendChild(formH1);
 
@@ -105,21 +134,21 @@ const renderNewPlayerForm = async () => {
   const puppyNameInput = document.createElement("input");
   puppyNameInput.setAttribute("id", "puppyValue")
   puppyNameInput.setAttribute("type", "text");
-  puppyNameInput.setAttribute("name", "PuppyName");
+  puppyNameInput.setAttribute("name", "puppyName");
   puppyNameInput.setAttribute("placeholder", "Puppy Name");
   form.appendChild(puppyNameInput);
 
   const dogBreedInput = document.createElement("input");
   dogBreedInput.setAttribute("id", "breedValue")
   dogBreedInput.setAttribute("type", "text");
-  dogBreedInput.setAttribute("name", "DogBreed");
+  dogBreedInput.setAttribute("name", "dogBreed");
   dogBreedInput.setAttribute("placeholder", "Breed");
   form.appendChild(dogBreedInput);
 
   const imgURL = document.createElement("input");
   imgURL.setAttribute("id", "imgValue")
   imgURL.setAttribute("type", "text");
-  imgURL.setAttribute("name", "image");
+  imgURL.setAttribute("name", "imgURL");
   imgURL.setAttribute("placeholder", "Image URL of puppy");
   form.appendChild(imgURL);
 
@@ -171,23 +200,22 @@ const renderNewPlayerForm = async () => {
   link.addEventListener('load', function() {
     applyFontToElements();
   });
-}
 
-
-        
-        
-    try {
-    
+try {
+    const players = await fetchAllPlayers();
+    renderAllPlayers(players, playerContainer);
   }     
      catch (err) {
         console.error('Uh oh, trouble rendering the new player form!', err);
     
      }
-
+    }
+    
 const init = async () => {
   renderNewPlayerForm();
-  const players = await fetchAllPlayers();
-  renderAllPlayers(players);
+  const allPlayers = await fetchAllPlayers();
+  renderAllPlayers(allPlayers, playerContainer);
 };
 
 init(); 
+
