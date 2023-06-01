@@ -1,8 +1,8 @@
-const playerContainer = document.getElementById('all-players-container');
-const newPlayerFormContainer = document.getElementById('new-player-form');
+const playerContainer = document.getElementById("all-players-container");
+const newPlayerFormContainer = document.getElementById("new-player-form");
 
 // Add your cohort name to the cohortName variable below, replacing the 'COHORT-NAME' placeholder
-const cohortName = '2302-ACC-PT-WEB-PT-C';
+const cohortName = "2302-ACC-PT-WEB-PT-C";
 // Use the APIURL variable for fetch requests
 const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 
@@ -11,180 +11,195 @@ const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
  * @returns An array of objects.
  */
 const fetchAllPlayers = async () => {
-    try {
-      const response = await fetch(`${APIURL}/players`);
-      const allPlayers = await response.json();
-      console.log(allPlayers);
-      return allPlayers;
-    } catch (err) {
-        console.error('Uh oh, trouble fetching players!', err);
-    }
+  try {
+    const response = await fetch(`${APIURL}/players`);
+    const allPlayers = await response.json();
+    return allPlayers;
+  } catch (err) {
+    console.error("Uh oh, trouble fetching players!", err);
+  }
 };
 
 const fetchSinglePlayer = async (playerId) => {
-    try {
-      const response = await fetch(`${APIURL}/players/${playerId}`);
-      const singlePlayer = await response.json();
-      console.log(singlePlayer)
-      return singlePlayer;
-    } catch (err) {
-        console.error(`Oh no, trouble fetching player #${playerId}!`, err);
-    }
+  try {
+    const response = await fetch(`${APIURL}/players/${playerId}`);
+    const singlePlayer = await response.json();
+    return singlePlayer;
+  } catch (err) {
+    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
+  }
 };
 
 const addNewPlayer = async (playerObj) => {
-    try {
-     const response = await fetch(`${APIURL}/players/`, {
-            method: 'POST', 
-            body: JSON.stringify(playerObj),
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        const result = await response.json();
-        console.log(result);
-        fetchAllPlayers();
-        
-    } catch (err) {
-        console.error('Oops, something went wrong with adding that player!', err);
-    }
+  try {
+    const response = await fetch(`${APIURL}/players/`, {
+      method: "POST",
+      body: JSON.stringify(playerObj),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const players = await fetchAllPlayers();
+    renderAllPlayers(players, playerContainer);
+  } catch (err) {
+    console.error("Oops, something went wrong with adding that player!", err);
+  }
 };
-
 
 const removePlayer = async (playerId) => {
-    try {
-       const response = await fetch(`${APIURL}/players/${playerId}`, {
-            method: 'DELETE'
-        });
-        const result = await response.json();
-        console.log(result);
-        fetchAllPlayers();
-
-    } catch (err) {
-        console.error(
-            `Whoops, trouble removing player #${playerId} from the roster!`,
-            err);
-    }
+  try {
+    const response = await fetch(`${APIURL}/players/${playerId}`, {
+      method: "DELETE",
+    });
+    const result = await response.json();
+    console.log(result);
+    fetchAllPlayers();
+  } catch (err) {
+    console.error(
+      `Whoops, trouble removing player #${playerId} from the roster!`,
+      err
+    );
+  }
 };
-
 
 /**
  * It takes an array of player objects, loops through them, and creates a string of HTML for each
- * player, then adds that string to a larger string of HTML that represents all the players. 
- * 
- * Then it takes that larger string of HTML and adds it to the DOM. 
- * 
- * It also adds event listeners to the buttons in each player card. 
- * 
- * The event listeners are for the "See details" and "Remove from roster" buttons. 
- * 
+ * player, then adds that string to a larger string of HTML that represents all the players.
+ *
+ * Then it takes that larger string of HTML and adds it to the DOM.
+ *
+ * It also adds event listeners to the buttons in each player card.
+ *
+ * The event listeners are for the "See details" and "Remove from roster" buttons.
+ *
  * The "See details" button calls the `fetchSinglePlayer` function, which makes a fetch request to the
- * API to get the details for a single player. 
- * 
+ * API to get the details for a single player.
+ *
  * The "Remove from roster" button calls the `removePlayer` function, which makes a fetch request to
- * the API to remove a player from the roster. 
- * 
+ * the API to remove a player from the roster.
+ *
  * The `fetchSinglePlayer` and `removePlayer` functions are defined in the
  * @param playerList - an array of player objects
  * @returns the playerContainerHTML variable.
  */
 const renderAllPlayers = async (playerList, playerContainer) => {
-    try {
-      playerContainer.innerHTML = 'All Players';
-      
-      const playersArray = Array.from(playerList);
-      playersArray.forEach((player) => {
-      const playerElement = document.createElement('div');
-      playerElement.classList.add('player');
-      playerElement.innerHTML = `
-                <h2>${player.name}</h2>
-                <p>${player.description}</p>
-                <p>${player.date}</p>
-                <p>${player.time}</p>
-                <p>${player.location}</p>
-                <button class="details-button" data-id="${player.id}">See Details</button>
-                <button class="delete-button" data-id="${player.id}">Delete</button>
-            `;
-      playerContainer.appendChild(playerElement); 
-      
+  try {
+    // Clear the content of playerContainer before rendering
+    playerContainer.innerHTML = "";
+
+    const allH1 = document.createElement("h1");
+    allH1.innerHTML = "All Players";
+    playerContainer.appendChild(allH1);
+    playerContainer.style.background = "beige";
+    playerContainer.style.display = "grid";
+    playerContainer.style.height = "600px";
+    playerContainer.style.width = "600px";
+    playerContainer.style.justifyContent = "center";
+    playerContainer.style.alignContent = "center";
+
+    playerList.forEach((player) => {
+      const playerElement = document.createElement("div");
+      playerElement.classList.add("player");
+
+      const nameElement = document.createElement("h2");
+      nameElement.textContent = player.name;
+      playerElement.appendChild(nameElement);
+
+      const breedElement = document.createElement("p");
+      breedElement.textContent = player.breed;
+      playerElement.appendChild(breedElement);
+
+      const statusElement = document.createElement("p");
+      statusElement.textContent = player.status;
+      playerElement.appendChild(statusElement);
+
+      const imageUrlElement = document.createElement("p");
+      imageUrlElement.textContent = player.imageUrl;
+      playerElement.appendChild(imageUrlElement);
+
+      const teamIdElement = document.createElement("p");
+      teamIdElement.textContent = player.teamId;
+      playerElement.appendChild(teamIdElement);
+
+      playerContainer.appendChild(playerElement);
     });
-
-    } catch (err) {
-        console.error('Uh oh, trouble rendering players!', err);
-    }
+  } catch (err) {
+    console.error("Uh oh, trouble rendering players!", err);
+  }
 };
-
 
 /**
  * It renders a form to the DOM, and when the form is submitted, it adds a new player to the database,
  * fetches all players from the database, and renders them to the DOM.
  */
+
 /* create form thru DOM - Dana */
 const renderNewPlayerForm = async () => {
-  const form = document.createElement('form');
-  form.setAttribute('method', 'POST');
-  form.setAttribute('action', `${APIURL}/players`)
-  form.setAttribute('id', 'signUpForm');
+  const form = document.createElement("form");
+  form.setAttribute("id", "signUpForm");
 
-  const formH1 = document.createElement("h1");  
+  const formH1 = document.createElement("h1");
   formH1.innerHTML = "Yay, puppies! Join a Puppy Bowl team today!";
   form.appendChild(formH1);
 
   // Create an input element for Puppy Name
   const puppyNameInput = document.createElement("input");
-  puppyNameInput.setAttribute("id", "puppyValue")
+  puppyNameInput.setAttribute("id", "puppyValue");
   puppyNameInput.setAttribute("type", "text");
   puppyNameInput.setAttribute("name", "puppyName");
   puppyNameInput.setAttribute("placeholder", "Puppy Name");
   form.appendChild(puppyNameInput);
 
+  // Create an input element for breed
   const dogBreedInput = document.createElement("input");
-  dogBreedInput.setAttribute("id", "breedValue")
+  dogBreedInput.setAttribute("id", "breedValue");
   dogBreedInput.setAttribute("type", "text");
   dogBreedInput.setAttribute("name", "dogBreed");
   dogBreedInput.setAttribute("placeholder", "Breed");
   form.appendChild(dogBreedInput);
 
+  // Create an input element to submit image URL
   const imgURL = document.createElement("input");
-  imgURL.setAttribute("id", "imgValue")
+  imgURL.setAttribute("id", "imgValue");
   imgURL.setAttribute("type", "text");
   imgURL.setAttribute("name", "imgURL");
   imgURL.setAttribute("placeholder", "Image URL of puppy");
   form.appendChild(imgURL);
 
   // create a submit button
-  const submit = document.createElement("input");
-  submit.setAttribute("id", "submitValue")
-  submit.setAttribute("type", "submit");
-  submit.setAttribute("value", "Submit");
-  form.appendChild(submit);
+  const addPlayerBtn = document.createElement("button");
+  addPlayerBtn.setAttribute("id", "submitValue");
+  addPlayerBtn.setAttribute("type", "submit");
+  addPlayerBtn.setAttribute("value", "Submit");
+  addPlayerBtn.innerHTML = "Add Player";
+  form.appendChild(addPlayerBtn);
 
   // Append the form to the newPlayerFormContainer element
   newPlayerFormContainer.appendChild(form);
 
   // Apply styles to the form
-  document.getElementById("new-player-form").style.background = "#c2c6f9";
-  document.getElementById("new-player-form").style.display = "grid";
-  document.getElementById("new-player-form").style.height = "600px";
-  document.getElementById("new-player-form").style.width = "600px";
-  document.getElementById("new-player-form").style.justifyContent = "center";
-  document.getElementById("new-player-form").style.alignContent = "center";
-  document.getElementById("new-player-form").style.marginTop = "100px";
+  form.style.background = "#c2c6f9";
+  form.style.display = "grid";
+  form.style.height = "600px";
+  form.style.width = "600px";
+  form.style.justifyContent = "center";
+  form.style.alignContent = "center";
+  form.style.marginTop = "100px";
 
-  document.getElementById("puppyValue").style.padding = "10px";
-  document.getElementById("puppyValue").style.margin = "10px";
-  document.getElementById("breedValue").style.padding = "10px";
-  document.getElementById("breedValue").style.margin = "10px";
-  document.getElementById("imgValue").style.padding = "10px";
-  document.getElementById("imgValue").style.margin = "10px";
+  puppyNameInput.style.padding = "10px";
+  puppyNameInput.style.margin = "10px";
+  dogBreedInput.style.padding = "10px";
+  dogBreedInput.style.margin = "10px";
+  imgURL.style.padding = "10px";
+  imgURL.style.margin = "10px";
 
-  document.querySelector("h1").style.letterSpacing = "3px";
-  document.querySelector("h1").style.width = "500px";
+  formH1.style.letterSpacing = "3px";
+  formH1.style.width = "500px";
 
   function applyFontToElements() {
-    var elements = document.querySelectorAll('body');
-    elements.forEach(function(element) {
-      element.style.fontFamily = 'Montserrat, sans-serif';
+    var elements = document.querySelectorAll("body");
+    elements.forEach(function (element) {
+      element.style.fontFamily = "Montserrat, sans-serif";
       element.style.wordSpacing = "23px";
       element.style.display = "grid";
       element.style.justifyItems = "center";
@@ -192,30 +207,49 @@ const renderNewPlayerForm = async () => {
   }
 
   // Load the font and apply it to the elements after it has finished loading
-  var link = document.createElement('link');
-  link.href = 'https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap';
-  link.rel = 'stylesheet';
+  var link = document.createElement("link");
+  link.href =
+    "https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap";
+  link.rel = "stylesheet";
   document.head.appendChild(link);
 
-  link.addEventListener('load', function() {
-    applyFontToElements();
-  });
+  link.addEventListener("load", applyFontToElements);
 
-try {
-    const players = await fetchAllPlayers();
-    renderAllPlayers(players, playerContainer);
-  }     
-     catch (err) {
-        console.error('Uh oh, trouble rendering the new player form!', err);
-    
-     }
-    }
-    
+  const playerObj = {
+    name: puppyNameInput.value,
+    breed: dogBreedInput.value,
+    imageURL: imgURL.value,
+    status: "active",
+    teamID: null,
+  };
+
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    const playerName = puppyNameInput.value;
+    const playerBreed = dogBreedInput.value;
+    const playerImageUrl = imgURL.value;
+
+    const newPlayer = {
+      name: playerName,
+      breed: playerBreed,
+      status: "bench",
+      imageUrl: playerImageUrl,
+      teamId: null,
+    };
+
+    await addNewPlayer(newPlayer);
+
+    puppyNameInput.value = "";
+    dogBreedInput.value = "";
+    imgURL.value = "";
+  });
+};
+
 const init = async () => {
   renderNewPlayerForm();
   const allPlayers = await fetchAllPlayers();
   renderAllPlayers(allPlayers, playerContainer);
 };
 
-init(); 
-
+init();
