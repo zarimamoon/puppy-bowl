@@ -124,6 +124,17 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       teamIdElement.textContent = player.teamId;
       playerElement.appendChild(teamIdElement);
 
+      // Apply styles to playerElement using inline styles
+      playerElement.style.background = "lightgray";
+      playerElement.style.padding = "10px";
+      playerElement.style.marginBottom = "-50px";
+      playerElement.style.display = "grid";
+      playerElement.style.justifyItems = "center";
+      playerElement.style.display = "grid";
+      playerElement.style.width = "500px";
+      playerElement.style.justifyContent = "center";
+      playerElement.style.alignContent = "center";
+      
       playerContainer.appendChild(playerElement);
     });
   } catch (err) {
