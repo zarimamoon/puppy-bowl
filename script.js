@@ -5,7 +5,7 @@ const newPlayerFormContainer = document.getElementById('new-player-form');
 const cohortName = '2302-ACC-PT-WEB-PT-C';
 ';
 // Use the APIURL variable for fetch requests
-const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${2302-ACC-PT-WEB-PT-C}/`;
+const APIURL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}/`;
 
 /**
  * It fetches all players from the API and returns them
