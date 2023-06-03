@@ -129,6 +129,7 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       // Add add Event listener for "Remove from roster" button
 
       // After deleting the party, re-render all parties
+
     });
   } catch (err) {
     console.error("Uh oh, trouble rendering players!", err);
