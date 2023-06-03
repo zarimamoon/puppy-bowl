@@ -1,7 +1,93 @@
-*{
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap"); /* import Montserrat font */
+
+* {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
 }
 
+body {
+  font-family: "Montserrat", sans-serif;
+  background: #16697a;
+  word-spacing: 23px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-items: center;
+}
 
+#signUpForm {
+  background: #ede7e3;
+  display: grid;
+  height: 600px;
+  width: 600px;
+  justify-content: center;
+  align-content: center;
+  margin-top: 100px;
+}
+
+#puppyValue,
+#breedValue,
+#imgValue {
+  padding: 10px;
+  margin: 10px;
+}
+
+#signUpForm h1 {
+  letter-spacing: 3px;
+  width: 500px;
+  text-align: center;
+}
+
+#signUpForm input {
+  padding: 10px;
+  margin: 10px;
+}
+
+#signUpForm button {
+  padding: 10px;
+  margin: 10px;
+}
+
+#all-players-container {
+  background: #489fb5;
+  display: flex;
+  flex-wrap: wrap;
+  width: 600px;
+  justify-content: center;
+}
+
+#all-players-container h1 {
+  letter-spacing: 3px;
+  width: 500px;
+  display: grid;
+  justify-content: center;
+}
+
+.card {
+  background: #ffa62b;
+  padding: 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  width: 500px;
+}
+
+button {
+  background-color: #82c0cc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 19px;
+  color: #ede7e3;
+  padding: 5px 32px;
+  text-align: center;
+  font-size: 16px;
+}
+
+button:hover {
+  background: #16697a;
+  color: #ede7e3;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-evenly;
+}
