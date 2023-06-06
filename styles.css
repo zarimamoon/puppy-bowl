@@ -8,7 +8,7 @@
 
 body {
   font-family: "Montserrat", sans-serif;
-  background: #16697a;
+  background: linear-gradient(310deg, #FED7BF, #c88092, #9e4c71);
   word-spacing: 23px;
   display: flex;
   flex-direction: column;
@@ -17,13 +17,15 @@ body {
 }
 
 #signUpForm {
-  background: #ede7e3;
+  background: #f5a6bc;
   display: grid;
-  height: 600px;
+  height: 400px;
   width: 600px;
   justify-content: center;
   align-content: center;
-  margin-top: 100px;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  border-radius: 15px;
 }
 
 #puppyValue,
@@ -42,6 +44,7 @@ body {
 #signUpForm input {
   padding: 10px;
   margin: 10px;
+  border-radius: 15px;
 }
 
 #signUpForm button {
@@ -50,11 +53,12 @@ body {
 }
 
 #all-players-container {
-  background: #489fb5;
+  background: #af5585;
   display: flex;
   flex-wrap: wrap;
   width: 600px;
   justify-content: center;
+  border-radius: 15px;
 }
 
 #all-players-container h1 {
@@ -65,25 +69,26 @@ body {
 }
 
 .card {
-  background: #ffa62b;
+  background: #ee95c5;
   padding: 10px;
   margin-bottom: 20px;
   text-align: center;
   width: 500px;
+  border-radius: 10px;
 }
 
 button {
-  background-color: #82c0cc;
-  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #e17e9c;
+  border: 3px solid rgb(169, 24, 63);
   border-radius: 19px;
-  color: #ede7e3;
+  color: #ffffff;
   padding: 5px 32px;
   text-align: center;
   font-size: 16px;
 }
 
 button:hover {
-  background: #16697a;
+  background: #63081f;
   color: #ede7e3;
 }
 
