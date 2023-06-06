@@ -43,8 +43,10 @@ const addNewPlayer = async (playerObj) => {
         "Content-Type": "application/json",
       },
     });
-    const players = await fetchAllPlayers();
-    renderAllPlayers(players, playerContainer);
+    console.log(response);
+    return response.status;
+    // const players = await fetchAllPlayers();
+    // renderAllPlayers(players, playerContainer);
   } catch (err) {
     console.error("Oops, something went wrong with adding that player!", err);
   }
@@ -125,11 +127,26 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       playerContainer.appendChild(playerCard);
 
       // Add Event listener for "See details" button
+      detailsButton.addEventListener("click", async (event) => {
+        const playerId = event.target.getAttribute("data-id");
+        const player = await fetchSinglePlayer(playerId);
+        console.log(player);
+      });
 
       // Add add Event listener for "Remove from roster" button
+      const deleteEvent = playerCard.querySelector(".delete-button");
+      deleteEvent.addEventListener("click", async (event) => {
+        const id = event.target.dataset.id;
+        await removePlayer(id);
 
+        // Remove the player card from the DOM
+        playerCard.remove();
+
+        // After deleting the player, re-render all players
+        const allPlayers = await fetchAllPlayers();
+        await renderAllPlayers(allPlayers);
+      });
       // After deleting the party, re-render all parties
-
     });
   } catch (err) {
     console.error("Uh oh, trouble rendering players!", err);
@@ -193,7 +210,7 @@ const renderNewPlayerForm = async () => {
     const playerBreed = dogBreedInput.value;
     const playerImageUrl = imgURL.value;
 
-    const newPlayer = {
+    const player = {
       name: playerName,
       breed: playerBreed,
       status: "bench",
@@ -201,9 +218,59 @@ const renderNewPlayerForm = async () => {
       teamId: null,
     };
 
-    console.log(newPlayer);
+    console.log(player);
 
-    await addNewPlayer(newPlayer);
+    const status = await addNewPlayer(player);
+    // make function from player card code below
+    if (status === 200) {
+      const playerCard = document.createElement("div");
+      playerCard.classList.add("card");
+
+      const nameElement = document.createElement("h2");
+      nameElement.textContent = player.name;
+      playerCard.appendChild(nameElement);
+
+      const buttonContainer = document.createElement("div");
+      buttonContainer.classList.add("buttons");
+      playerCard.appendChild(buttonContainer);
+
+      // Create the "See Details" button
+      const detailsButton = document.createElement("button");
+      detailsButton.classList.add("details-button");
+      detailsButton.setAttribute("data-id", player.id);
+      detailsButton.textContent = "See Details";
+      buttonContainer.appendChild(detailsButton);
+
+      // Create the "Delete" button
+      const deleteButton = document.createElement("button");
+      deleteButton.classList.add("delete-button");
+      deleteButton.setAttribute("data-id", player.id);
+      deleteButton.textContent = "Delete";
+      buttonContainer.appendChild(deleteButton);
+
+      playerContainer.appendChild(playerCard);
+
+      // Add Event listener for "See details" button
+      detailsButton.addEventListener("click", async (event) => {
+        const playerId = event.target.getAttribute("data-id");
+        const player = await fetchSinglePlayer(playerId);
+        console.log(player);
+      });
+
+      // Add add Event listener for "Remove from roster" button
+      const deleteEvent = playerCard.querySelector(".delete-button");
+      deleteEvent.addEventListener("click", async (event) => {
+        const id = event.target.dataset.id;
+        await removePlayer(id);
+
+        // Remove the player card from the DOM
+        playerCard.remove();
+
+        // After deleting the player, re-render all players
+        const allPlayers = await fetchAllPlayers();
+        await renderAllPlayers(allPlayers);
+      });
+    }
 
     puppyNameInput.value = "";
     dogBreedInput.value = "";
