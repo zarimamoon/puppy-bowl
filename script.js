@@ -138,7 +138,7 @@ const renderAllPlayers = async (playerList, playerContainer) => {
         const playerId = playerElement.getAttribute('data-player-id');
         const singlePlayer = await fetchSinglePlayer(playerId);
         const { name, breed, status, teamId, imageUrl } = singlePlayer.data.player;
-        console.log("name of dog: " + name + "breed of dog: " + breed + "status of dog: " + status + "Team ID of dog: " + teamId + "Image URL od dog: " + imageUrl);
+        console.log("name of dog: " + name + "\nbreed of dog: " + breed + "\nstatus of dog: " + status + "\nTeam ID of dog: " + teamId + "\nImage URL od dog: " + imageUrl);
         alert(`Name of dog: ${name}\nBreed of dog: ${breed}\nStatus: ${status}\nTeam ID: ${teamId}\nImage URL: ${imageUrl}`);
         } catch (error) {
         console.error(`Error occurred while fetching details for player #${playerId}`, error);
