@@ -126,25 +126,31 @@ const renderAllPlayers = async (playerList, playerContainer) => {
 
       playerContainer.appendChild(playerElement);
 
-      const button = document.createElement('button')
-      button.className = "dButton";
 
-     
+      //detail button
+      const button = document.createElement('button');
+      button.className = "dButton";
       button.innerText = 'Details';
 
-      
-      button.addEventListener('click', () => {
-      
-     
-    
-      alert("Name of dog: " + player.name + "\nbreed of dog: " + player.breed + "\nstatus: " + player.status + "\nTeam ID: " + player.teamId
-      + "\nImage URL: " + player.imageUrl);
+      button.addEventListener('click', async () => {
+      try {
+        const playerId = playerElement.getAttribute('data-player-id');
+        const singlePlayer = await fetchSinglePlayer(playerId);
+        console.log("Name of dog: " + player.name);
+        console.log("Breed of Dog: " + player.breed);
+        console.log("Status of dog: " + player.status);
+        console.log("Team ID of dog: " + player.teamId);
+        console.log("Image URL of dog: " + player.imageUrl);
+        alert(`Name of dog: ${player.name}\nBreed of dog: ${player.breed}\nStatus: ${player.status}\nTeam ID: ${player.teamId}\nImage URL: ${player.imageUrl}`);
+        } catch (error) {
+         console.error(`Error occurred while fetching details for player #${player.id}`, error);
+        }
       });
 
-      // Add the button to your HTML <body> tag
       playerElement.appendChild(button);
 
 
+      //delete button 
       const deleteButton = document.createElement('button');
       deleteButton.className = 'delete';
       deleteButton.innerText = 'Remove';
@@ -171,9 +177,6 @@ const renderAllPlayers = async (playerList, playerContainer) => {
     console.error("Uh oh, trouble rendering players!", err);
 
   }
-
-  
-
 
 };
 
