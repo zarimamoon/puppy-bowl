@@ -128,27 +128,24 @@ const renderAllPlayers = async (playerList, playerContainer) => {
 
 
       //detail button
+
       const button = document.createElement('button');
-      button.className = "dButton";
+      button.className = 'dButton';
       button.innerText = 'Details';
 
       button.addEventListener('click', async () => {
-      try {
+        try {
         const playerId = playerElement.getAttribute('data-player-id');
         const singlePlayer = await fetchSinglePlayer(playerId);
-        console.log("Name of dog: " + player.name);
-        console.log("Breed of Dog: " + player.breed);
-        console.log("Status of dog: " + player.status);
-        console.log("Team ID of dog: " + player.teamId);
-        console.log("Image URL of dog: " + player.imageUrl);
-        alert(`Name of dog: ${player.name}\nBreed of dog: ${player.breed}\nStatus: ${player.status}\nTeam ID: ${player.teamId}\nImage URL: ${player.imageUrl}`);
+        const { name, breed, status, teamId, imageUrl } = singlePlayer.data.player;
+        console.log("name of dog: " + name + "breed of dog: " + breed + "status of dog: " + status + "Team ID of dog: " + teamId + "Image URL od dog: " + imageUrl);
+        alert(`Name of dog: ${name}\nBreed of dog: ${breed}\nStatus: ${status}\nTeam ID: ${teamId}\nImage URL: ${imageUrl}`);
         } catch (error) {
-         console.error(`Error occurred while fetching details for player #${player.id}`, error);
+        console.error(`Error occurred while fetching details for player #${playerId}`, error);
         }
       });
 
-      playerElement.appendChild(button);
-
+        playerElement.appendChild(button);
 
       //delete button 
       const deleteButton = document.createElement('button');
