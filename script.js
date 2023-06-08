@@ -55,7 +55,7 @@ const removePlayer = async (playerId) => {
     });
     const result = await response.json();
     console.log(result);
-    fetchAllPlayers();
+    await fetchAllPlayers();
   } catch (err) {
     console.error(
       `Whoops, trouble removing player #${playerId} from the roster!`,
@@ -94,15 +94,9 @@ const renderAllPlayers = async (playerList, playerContainer) => {
     playerContainer.appendChild(allH1);
     allH1.className = 'title';
 
-    /*playerContainer.style.background = "beige";
-    playerContainer.style.display = "grid";
-    playerContainer.style.height = "600px";
-    playerContainer.style.width = "600px";
-    playerContainer.style.justifyContent = "center";
-    playerContainer.style.alignContent = "center";*/
-
     playerList.forEach((player) => {
       const playerElement = document.createElement("div");
+      playerElement.setAttribute('data-player-id', player.id);
       playerElement.classList.add("player");
       playerElement.className = "play";
 
@@ -135,15 +129,13 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       const button = document.createElement('button')
       button.className = "dButton";
 
-      //details button
-
-      // Set the button text to 'Can you click me?'
+     
       button.innerText = 'Details';
 
-      // Attach the "click" event to your button
+      
       button.addEventListener('click', () => {
-      // When there is a "click"
-      // it shows an alert in the browser
+      
+     
     
       alert("Name of dog: " + player.name + "\nbreed of dog: " + player.breed + "\nstatus: " + player.status + "\nTeam ID: " + player.teamId
       + "\nImage URL: " + player.imageUrl);
@@ -157,16 +149,34 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       deleteButton.className = 'delete';
       deleteButton.innerText = 'Remove';
       deleteButton.addEventListener('click', async (event) => {
-        playerElement.remove(); //added to remove node or in this case the party info you wanted when clicking delete
+      try {
+        playerElement.remove();
+        const playerId = playerElement.getAttribute('data-player-id');
+        await removePlayer(playerId);
+        console.log(`Player with ID ${playerId} removed from the API.`);
+        // Fetch and render updated player list
+        const updatedPlayers = await fetchAllPlayers();
+        renderAllPlayers(updatedPlayers, playerContainer);
+        } catch (error) {
+        console.error('Error occurred while removing player:', error);
+      }
       });
 
       playerElement.appendChild(deleteButton);
-      
+ 
+
+     
     });
   } catch (err) {
     console.error("Uh oh, trouble rendering players!", err);
+
   }
+
+  
+
+
 };
+
 
 /**
  * It renders a form to the DOM, and when the form is submitted, it adds a new player to the database,

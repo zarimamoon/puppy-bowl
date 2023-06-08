@@ -11,7 +11,7 @@ All Puppy Bowl players are rendered on card elements with their information
 }
 
 .body{
-  background-color: orange;
+  background-color: #6B5B95;
 }
 
 .TITLE{
@@ -27,24 +27,24 @@ All Puppy Bowl players are rendered on card elements with their information
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-gap: 20px;
-  background-color: #2196F3;
+  background-color: darkblue;
   padding-top: 10px;
   justify-content: center;
   border: 1px dashed;
   width: 50%;
-  background-color: yellow;
+  background-color: forestgreen;
 }
 
 .play{
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s;
   width: 1fr;
-  background-color: skyblue;
+  background-color: lightcoral;
   
 }
 
 .playerNAME{
-  color: blue;
+  color: darkblue;
   text-align: center;
 }
 
@@ -58,13 +58,30 @@ All Puppy Bowl players are rendered on card elements with their information
 }
 
 .dButton{
-  display: grid;
-  justify-content: flex-start;
+  position: relative;
+  color: white;
+  background: #0D1127;
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  border-radius: 5rem;
+  border: 5px solid #5978F3;
+  font-size: 1.2rem;
+  line-height: 1em;
+  letter-spacing: 0.075em;
+  transition: background 0.3s;
+ 
 }
 
 .delete{
-  display: grid;
-  justify-content: end;
+  position: relative;
+  color: white;
+  background: #0D1127;
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  border-radius: 5rem;
+  border: 5px solid #5978F3;
+  font-size: 1.2rem;
+  line-height: 1em;
+  letter-spacing: 0.075em;
+  transition: background 0.3s;
 }
 
 
