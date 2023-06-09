@@ -132,9 +132,8 @@ function templateAllPlayer(player) {
       const playerId = playerCard.getAttribute('data-player-id');
       await removePlayer(playerId);
       console.log(`Player with ID ${playerId} removed from the API.`);
-      // Fetch and render updated player list
-      const updatedPlayers = await fetchAllPlayers();
-      renderAllPlayers(updatedPlayers, playerContainer);
+      
+      
       } catch (error) {
       console.error('Error occurred while removing player:', error);
     }
