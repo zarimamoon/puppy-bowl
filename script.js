@@ -93,9 +93,7 @@ const removePlayer = async (playerId) => {
 const renderAllPlayers = async (playerList, playerContainer) => {
   try {
     // create a header for All Players
-    const allH1 = document.createElement("h1");
-    allH1.innerHTML = "All Puppies";
-    playerContainer.appendChild(allH1);
+    playerContainer.innerHTML = `<h1>All Puppies</h1>`;
 
     //loop through player objects
     playerList.forEach((player) => {
@@ -127,25 +125,28 @@ const renderAllPlayers = async (playerList, playerContainer) => {
       playerContainer.appendChild(playerCard);
 
       // Add Event listener for "See details" button
-      detailsButton.addEventListener("click", async (event) => {
-        const playerId = event.target.getAttribute("data-id");
-        const player = await fetchSinglePlayer(playerId);
-        console.log(player);
-      });
+      playerCard
+        .querySelector(".details-button")
+        .addEventListener("click", async (event) => {
+          const playerId = event.target.dataset.id;
+          const player = await fetchSinglePlayer(playerId);
+          console.log(player);
+        });
 
-      // Add add Event listener for "Remove from roster" button
-      const deleteEvent = playerCard.querySelector(".delete-button");
-      deleteEvent.addEventListener("click", async (event) => {
-        const id = event.target.dataset.id;
-        await removePlayer(id);
+      // Add add Event listener for "Delete" button
+      playerCard
+        .querySelector(".delete-button")
+        .addEventListener("click", async (event) => {
+          const id = event.target.dataset.id;
+          await removePlayer(id);
 
-        // Remove the player card from the DOM
-        playerCard.remove();
+          // Remove the player card from the DOM
+          playerCard.remove();
 
-        // After deleting the player, re-render all players
-        const allPlayers = await fetchAllPlayers();
-        await renderAllPlayers(allPlayers);
-      });
+          // After deleting the player, re-render all players
+          const allPlayers = await fetchAllPlayers();
+          await renderAllPlayers(allPlayers);
+        });
       // After deleting the party, re-render all parties
     });
   } catch (err) {
