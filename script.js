@@ -91,6 +91,7 @@ const removePlayer = async (playerId) => {
 function templateAllPlayer(player) {
   const playerCard = document.createElement("div");
   playerCard.classList.add("card");
+  playerCard.setAttribute('data-player-id', player.id);
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = player.name;
@@ -100,40 +101,47 @@ function templateAllPlayer(player) {
   buttonContainer.classList.add("buttons");
   playerCard.appendChild(buttonContainer);
 
-  // Create the "See Details" button
-  const detailsButton = document.createElement("button");
-  detailsButton.classList.add("details-button");
-  detailsButton.setAttribute("data-id", player.id);
-  detailsButton.textContent = "See Details";
-  buttonContainer.appendChild(detailsButton);
+  //detail button
 
-  // Create the "Delete" button
-  const deleteButton = document.createElement("button");
-  deleteButton.classList.add("delete-button");
-  deleteButton.setAttribute("data-id", player.id);
-  deleteButton.textContent = "Delete";
-  buttonContainer.appendChild(deleteButton);
+  const button = document.createElement('button');
+  button.className = 'dButton';
+  button.innerText = 'Details';
 
-  // Add Event listener for "See details" button
-  detailsButton.addEventListener("click", async (event) => {
-    const playerId = event.target.getAttribute("data-id");
-    const player = await fetchSinglePlayer(playerId);
-    console.log(player);
+  button.addEventListener('click', async () => {
+    try {
+    const playerId = playerCard.getAttribute('data-player-id');
+    const singlePlayer = await fetchSinglePlayer(playerId);
+    const { name, breed, status, teamId, imageUrl } = singlePlayer.data.player;
+    console.log("name of dog: " + name + "\nbreed of dog: " + breed + "\nstatus of dog: " + status + "\nTeam ID of dog: " + teamId + "\nImage URL od dog: " + imageUrl);
+    alert(`Name of dog: ${name}\nBreed of dog: ${breed}\nStatus: ${status}\nTeam ID: ${teamId}\nImage URL: ${imageUrl}`);
+    } catch (error) {
+    console.error(`Error occurred while fetching details for player #${playerId}`, error);
+    }
   });
 
-  // Add add Event listener for "Remove from roster" button
-  const deleteEvent = playerCard.querySelector(".delete-button");
-  deleteEvent.addEventListener("click", async (event) => {
-    const id = event.target.dataset.id;
-    await removePlayer(id);
+    buttonContainer.appendChild(button);
 
-    // Remove the player card from the DOM
-    playerCard.remove();
+ 
+    //delete button 
+    const deleteButton = document.createElement('button');
+    deleteButton.className = 'delete';
+    deleteButton.innerText = 'Remove';
+    deleteButton.addEventListener('click', async (event) => {
+    try {
+      playerCard.remove();
+      const playerId = playerCard.getAttribute('data-player-id');
+      await removePlayer(playerId);
+      console.log(`Player with ID ${playerId} removed from the API.`);
+      // Fetch and render updated player list
+      const updatedPlayers = await fetchAllPlayers();
+      renderAllPlayers(updatedPlayers, playerContainer);
+      } catch (error) {
+      console.error('Error occurred while removing player:', error);
+    }
+    });
 
-    // After deleting the player, re-render all players
-    const allPlayers = await fetchAllPlayers();
-    await renderAllPlayers(allPlayers);
-  });
+    buttonContainer.appendChild(deleteButton);
+  
 
   return playerCard
 }
